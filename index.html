@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Helper - Find Flights & Hotels</title>
+    <link rel="stylesheet" href="styles/main.css?v=2">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Search Form Container -->
+        <div id="searchContainer" class="main-content">
+            <!-- Search form will be rendered here -->
+        </div>
+
+        <!-- Results Container -->
+        <div id="resultsContainer" class="main-content hidden">
+            <!-- Results will be rendered here -->
+        </div>
+    </div>
+
+    <script type="module" src="src/app/TravelApp.js?v=2"></script>
+    <script type="module">
+        import { TravelApp } from './src/app/TravelApp.js';
+        
+        // Initialize the application when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            new TravelApp();
+        });
+    </script>
+</body>
+</html>

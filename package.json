@@ -1,0 +1,23 @@
+{
+  "name": "travel-helper",
+  "version": "1.0.0",
+  "description": "Web app for finding flights and hotels from multiple sources",
+  "main": "index.html",
+  "type": "module",
+  "scripts": {
+    "start": "npx http-server . -p 3000 -o",
+    "dev": "npx http-server . -p 3000 -o --cors"
+  },
+  "keywords": [
+    "travel",
+    "flights",
+    "hotels",
+    "search",
+    "scraper"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
