@@ -354,9 +354,9 @@ body {
 
 .flight-options,
 .hotel-options {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-    gap: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .flight-option,
@@ -367,6 +367,240 @@ body {
     padding: 20px;
     cursor: pointer;
     transition: all 0.2s ease;
+    position: relative;
+}
+
+.result-list-item {
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.result-list-item:hover {
+    border-color: #667eea;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+    transform: translateY(-2px);
+}
+
+.flight-list-item,
+.hotel-list-item {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.list-item-main {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.list-item-route {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex: 1;
+    min-width: 300px;
+}
+
+.route-segment {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 80px;
+}
+
+.route-time {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 4px;
+}
+
+.route-location {
+    font-size: 0.9rem;
+    color: #718096;
+}
+
+.route-connector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    padding: 0 15px;
+    position: relative;
+}
+
+.route-connector::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #e2e8f0;
+    z-index: 0;
+}
+
+.route-duration {
+    font-weight: 500;
+    color: #4a5568;
+    background: white;
+    padding: 0 8px;
+    position: relative;
+    z-index: 1;
+}
+
+.route-stops {
+    font-size: 0.85rem;
+    color: #718096;
+    background: white;
+    padding: 0 8px;
+    margin-top: 4px;
+    position: relative;
+    z-index: 1;
+}
+
+.list-item-airline {
+    display: flex;
+    flex-direction: column;
+    min-width: 120px;
+}
+
+.airline-name {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #2d3748;
+    margin-bottom: 4px;
+}
+
+.flight-number {
+    font-size: 0.85rem;
+    color: #718096;
+}
+
+.source-badge {
+    display: inline-block;
+    background: #667eea;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-top: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 4px rgba(102, 126, 234, 0.2);
+}
+
+.hotel-name-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+}
+
+.hotel-name-header .hotel-name {
+    margin-bottom: 0;
+}
+
+.list-item-price {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    min-width: 100px;
+}
+
+.price-amount {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #667eea;
+    margin-bottom: 4px;
+}
+
+.price-currency {
+    font-size: 0.9rem;
+    color: #718096;
+}
+
+.list-item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+    min-width: 300px;
+}
+
+.list-item-info .hotel-name {
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: #2d3748;
+}
+
+.hotel-location {
+    font-size: 0.95rem;
+    color: #4a5568;
+    font-weight: 500;
+}
+
+.hotel-rating {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.hotel-amenities {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.amenity-tag {
+    background: #f7fafc;
+    color: #4a5568;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border: 1px solid #e2e8f0;
+}
+
+.hotel-dates {
+    display: flex;
+    gap: 15px;
+    font-size: 0.9rem;
+    color: #718096;
+}
+
+.list-item-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 10px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.list-item-actions .book-button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+}
+
+.list-item-actions .book-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.list-item {
     position: relative;
 }
 
@@ -394,6 +628,7 @@ body {
     border-radius: 4px;
     font-size: 12px;
     font-weight: 600;
+    z-index: 10;
 }
 
 .step-actions {
@@ -612,23 +847,18 @@ body {
     font-weight: 500;
 }
 
-.source-section {
-    margin-bottom: 40px;
-}
-
-.source-title {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #2d3748;
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #e2e8f0;
-}
+/* Removed source-section and source-title styles - no longer grouping by source */
 
 .results-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
     gap: 20px;
+}
+
+.results-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .result-card {
@@ -864,14 +1094,7 @@ body {
     gap: 10px;
 }
 
-.source-title {
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: #4a5568;
-    margin-bottom: 15px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid #e2e8f0;
-}
+    /* Removed source-title styles - no longer grouping by source */
 
 /* Responsive Design */
 @media (max-width: 768px) {
@@ -895,6 +1118,39 @@ body {
     
     .results-grid {
         grid-template-columns: 1fr;
+    }
+    
+    .list-item-main {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .list-item-route {
+        width: 100%;
+        min-width: auto;
+    }
+    
+    .list-item-airline {
+        min-width: auto;
+    }
+    
+    .list-item-price {
+        align-items: flex-start;
+        min-width: auto;
+    }
+    
+    .list-item-info {
+        min-width: auto;
+    }
+    
+    .list-item-actions {
+        width: 100%;
+    }
+    
+    .list-item-actions .book-button {
+        width: 100%;
+        text-align: center;
     }
     
     .results-header {
@@ -960,7 +1216,7 @@ body {
     
     .flight-options,
     .hotel-options {
-        grid-template-columns: 1fr;
+        gap: 10px;
     }
     
     .combinations-grid {

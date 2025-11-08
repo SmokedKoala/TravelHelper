@@ -48,8 +48,6 @@ export class ResultsDisplay {
 
     renderCombinedResults() {
         const { flights, hotels } = this.results;
-        const flightGroupedResults = this.groupResultsBySource(flights);
-        const hotelGroupedResults = this.groupResultsBySource(hotels);
         
         this.container.innerHTML = `
             <div class="results-container">
@@ -59,34 +57,24 @@ export class ResultsDisplay {
                 </div>
                 
                 <div class="results-summary">
-                    <p>Found ${flights.length} flights and ${hotels.length} hotels from ${Object.keys(flightGroupedResults).length + Object.keys(hotelGroupedResults).length} sources</p>
+                    <p>Found ${flights.length} flights and ${hotels.length} hotels</p>
                 </div>
 
                 <div class="results-content">
                     <!-- Flights Section -->
                     <div class="service-section">
                         <h3 class="service-title">✈️ Flights</h3>
-                        ${Object.entries(flightGroupedResults).map(([source, flights]) => `
-                            <div class="source-section">
-                                <h4 class="source-title">${source}</h4>
-                                <div class="results-grid">
-                                    ${flights.map(flight => this.renderFlightCard(flight)).join('')}
-                                </div>
-                            </div>
-                        `).join('')}
+                        <div class="results-list">
+                            ${flights.map(flight => this.renderFlightListItem(flight)).join('')}
+                        </div>
                     </div>
 
                     <!-- Hotels Section -->
                     <div class="service-section">
                         <h3 class="service-title">🏨 Hotels</h3>
-                        ${Object.entries(hotelGroupedResults).map(([source, hotels]) => `
-                            <div class="source-section">
-                                <h4 class="source-title">${source}</h4>
-                                <div class="results-grid">
-                                    ${hotels.map(hotel => this.renderHotelCard(hotel)).join('')}
-                                </div>
-                            </div>
-                        `).join('')}
+                        <div class="results-list">
+                            ${hotels.map(hotel => this.renderHotelListItem(hotel)).join('')}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -109,8 +97,6 @@ export class ResultsDisplay {
     }
 
     renderFlightResults() {
-        const groupedResults = this.groupResultsBySource(this.results);
-        
         this.container.innerHTML = `
             <div class="results-container">
                 <div class="results-header">
@@ -118,26 +104,19 @@ export class ResultsDisplay {
                 </div>
                 
                 <div class="results-summary">
-                    <p>Found ${this.results.length} flights from ${Object.keys(groupedResults).length} sources</p>
+                    <p>Found ${this.results.length} flights</p>
                 </div>
 
                 <div class="results-content">
-                    ${Object.entries(groupedResults).map(([source, flights]) => `
-                        <div class="source-section">
-                            <h3 class="source-title">${source}</h3>
-                            <div class="results-grid">
-                                ${flights.map(flight => this.renderFlightCard(flight)).join('')}
-                            </div>
-                        </div>
-                    `).join('')}
+                    <div class="results-list">
+                        ${this.results.map(flight => this.renderFlightListItem(flight)).join('')}
+                    </div>
                 </div>
             </div>
         `;
     }
 
     renderHotelResults() {
-        const groupedResults = this.groupResultsBySource(this.results);
-        
         this.container.innerHTML = `
             <div class="results-container">
                 <div class="results-header">
@@ -145,18 +124,13 @@ export class ResultsDisplay {
                 </div>
                 
                 <div class="results-summary">
-                    <p>Found ${this.results.length} hotels from ${Object.keys(groupedResults).length} sources</p>
+                    <p>Found ${this.results.length} hotels</p>
                 </div>
 
                 <div class="results-content">
-                    ${Object.entries(groupedResults).map(([source, hotels]) => `
-                        <div class="source-section">
-                            <h3 class="source-title">${source}</h3>
-                            <div class="results-grid">
-                                ${hotels.map(hotel => this.renderHotelCard(hotel)).join('')}
-                            </div>
-                        </div>
-                    `).join('')}
+                    <div class="results-list">
+                        ${this.results.map(hotel => this.renderHotelListItem(hotel)).join('')}
+                    </div>
                 </div>
             </div>
         `;
@@ -202,6 +176,43 @@ export class ResultsDisplay {
         `;
     }
 
+    renderFlightListItem(flight) {
+        return `
+            <div class="result-list-item flight-list-item">
+                <div class="list-item-main">
+                    <div class="list-item-route">
+                        <div class="route-segment">
+                            <div class="route-time">${flight.departureTime}</div>
+                            <div class="route-location">${flight.origin}</div>
+                        </div>
+                        <div class="route-connector">
+                            <div class="route-duration">${flight.duration}</div>
+                            <div class="route-stops">${flight.stops === 0 ? 'Direct' : `${flight.stops} stop${flight.stops > 1 ? 's' : ''}`}</div>
+                        </div>
+                        <div class="route-segment">
+                            <div class="route-time">${flight.arrivalTime}</div>
+                            <div class="route-location">${flight.destination}</div>
+                        </div>
+                    </div>
+                    <div class="list-item-airline">
+                        <div class="airline-name">${flight.airline}</div>
+                        <div class="flight-number">${flight.id}</div>
+                        <div class="source-badge">${flight.source}</div>
+                    </div>
+                    <div class="list-item-price">
+                        <div class="price-amount">$${flight.price}</div>
+                        <div class="price-currency">${flight.currency}</div>
+                    </div>
+                </div>
+                <div class="list-item-actions">
+                    <a href="${flight.bookingUrl}" target="_blank" class="book-button">
+                        Book on ${flight.source}
+                    </a>
+                </div>
+            </div>
+        `;
+    }
+
     renderHotelCard(hotel) {
         return `
             <div class="result-card hotel-card">
@@ -237,6 +248,44 @@ export class ResultsDisplay {
                 </div>
                 
                 <div class="card-actions">
+                    <a href="${hotel.bookingUrl}" target="_blank" class="book-button">
+                        Book on ${hotel.source}
+                    </a>
+                </div>
+            </div>
+        `;
+    }
+
+    renderHotelListItem(hotel) {
+        return `
+            <div class="result-list-item hotel-list-item">
+                <div class="list-item-main">
+                    <div class="list-item-info">
+                        <div class="hotel-name-header">
+                            <div class="hotel-name">${hotel.name}</div>
+                            <div class="source-badge">${hotel.source}</div>
+                        </div>
+                        <div class="hotel-location">${hotel.location}</div>
+                        <div class="hotel-rating">
+                            <span class="stars">${'★'.repeat(Math.floor(hotel.rating))}</span>
+                            <span class="rating-value">${hotel.rating}</span>
+                        </div>
+                        <div class="hotel-amenities">
+                            ${hotel.amenities.slice(0, 5).map(amenity => `
+                                <span class="amenity-tag">${amenity}</span>
+                            `).join('')}
+                        </div>
+                        <div class="hotel-dates">
+                            <span>Check-in: ${this.formatDate(hotel.checkIn)}</span>
+                            <span>Check-out: ${this.formatDate(hotel.checkOut)}</span>
+                        </div>
+                    </div>
+                    <div class="list-item-price">
+                        <div class="price-amount">$${hotel.price}</div>
+                        <div class="price-currency">${hotel.currency}/night</div>
+                    </div>
+                </div>
+                <div class="list-item-actions">
                     <a href="${hotel.bookingUrl}" target="_blank" class="book-button">
                         Book on ${hotel.source}
                     </a>

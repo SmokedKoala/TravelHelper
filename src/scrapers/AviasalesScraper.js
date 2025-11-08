@@ -103,33 +103,11 @@ export class AviasalesScraper extends ScraperInterface {
     }
 
     async searchHotels(searchParams) {
-        this.validateParams(searchParams, 'hotels');
-        
-        console.log(`Searching hotels on ${this.name}:`, searchParams);
-        
-        // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 900));
-        
-        // Mock hotel results
-        return [
-            {
-                id: 'aviasales_hotel_1',
-                name: 'Hotel Moscow Plaza',
-                location: searchParams.destination,
-                price: 95,
-                currency: 'USD',
-                rating: 4.2,
-                amenities: ['WiFi', 'Spa', 'Restaurant', 'Business Center'],
-                checkIn: searchParams.checkIn,
-                checkOut: searchParams.checkOut,
-                source: this.name,
-                bookingUrl: `${this.baseUrl}/hotels`
-            }
-        ];
+        throw new Error(`${this.name} scraper must implement searchHotels method`);
     }
 
     getSupportedServices() {
-        return ['flights', 'hotels'];
+        return ['flights'];
     }
 
     validateParams(searchParams, serviceType) {
@@ -141,12 +119,7 @@ export class AviasalesScraper extends ScraperInterface {
                 }
             }
         } else if (serviceType === 'hotels') {
-            const required = ['destination', 'checkIn', 'checkOut', 'guests'];
-            for (const field of required) {
-                if (!searchParams[field]) {
-                    throw new Error(`Missing required parameter: ${field}`);
-                }
-            }
+            throw new Error(`Missing required parameter: ${field}`);
         }
         return true;
     }

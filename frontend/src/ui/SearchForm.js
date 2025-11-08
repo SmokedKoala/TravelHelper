@@ -5,12 +5,94 @@ export class SearchForm {
     constructor(containerId, onSearch) {
         this.container = document.getElementById(containerId);
         this.onSearch = onSearch;
+        this.cities = this.getCitiesList();
         this.init();
+    }
+
+    getCitiesList() {
+        return [
+            { value: 'Moscow', label: 'Moscow (MOW)' },
+            { value: 'Saint Petersburg', label: 'Saint Petersburg (LED)' },
+            { value: 'Samara', label: 'Samara (KUF)' },
+            { value: 'Kazan', label: 'Kazan (KZN)' },
+            { value: 'Novosibirsk', label: 'Novosibirsk (OVB)' },
+            { value: 'Yekaterinburg', label: 'Yekaterinburg (SVX)' },
+            { value: 'Sochi', label: 'Sochi (AER)' },
+            { value: 'Krasnodar', label: 'Krasnodar (KRR)' },
+            { value: 'Rostov-on-Don', label: 'Rostov-on-Don (ROV)' },
+            { value: 'Volgograd', label: 'Volgograd (VOG)' },
+            { value: 'Nizhny Novgorod', label: 'Nizhny Novgorod (GOJ)' },
+            { value: 'Ufa', label: 'Ufa (UFA)' },
+            { value: 'Perm', label: 'Perm (PEE)' },
+            { value: 'Omsk', label: 'Omsk (OMS)' },
+            { value: 'Krasnoyarsk', label: 'Krasnoyarsk (KJA)' },
+            { value: 'Vladivostok', label: 'Vladivostok (VVO)' },
+            { value: 'Irkutsk', label: 'Irkutsk (IKT)' },
+            { value: 'Khabarovsk', label: 'Khabarovsk (KHV)' },
+            { value: 'New York', label: 'New York (NYC)' },
+            { value: 'Los Angeles', label: 'Los Angeles (LAX)' },
+            { value: 'London', label: 'London (LON)' },
+            { value: 'Paris', label: 'Paris (PAR)' },
+            { value: 'Berlin', label: 'Berlin (BER)' },
+            { value: 'Rome', label: 'Rome (ROM)' },
+            { value: 'Madrid', label: 'Madrid (MAD)' },
+            { value: 'Amsterdam', label: 'Amsterdam (AMS)' },
+            { value: 'Dubai', label: 'Dubai (DXB)' },
+            { value: 'Istanbul', label: 'Istanbul (IST)' },
+            { value: 'Bangkok', label: 'Bangkok (BKK)' },
+            { value: 'Tokyo', label: 'Tokyo (TYO)' },
+            { value: 'Singapore', label: 'Singapore (SIN)' },
+            { value: 'Sydney', label: 'Sydney (SYD)' }
+        ];
     }
 
     init() {
         this.render();
         this.attachEventListeners();
+        this.populateFromUrl();
+    }
+
+    /**
+     * Populate form from URL parameters if available
+     */
+    populateFromUrl() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const from = urlParams.get('from');
+        const to = urlParams.get('to');
+        const departure = urlParams.get('departure');
+        const returnDate = urlParams.get('return');
+        const guests = urlParams.get('guests');
+        const rooms = urlParams.get('rooms');
+        
+        if (from) {
+            const originField = this.container.querySelector('#origin');
+            if (originField) originField.value = decodeURIComponent(from);
+        }
+        
+        if (to) {
+            const destinationField = this.container.querySelector('#destination');
+            if (destinationField) destinationField.value = decodeURIComponent(to);
+        }
+        
+        if (departure) {
+            const departureField = this.container.querySelector('#departureDate');
+            if (departureField) departureField.value = departure;
+        }
+        
+        if (returnDate) {
+            const returnField = this.container.querySelector('#returnDate');
+            if (returnField) returnField.value = returnDate;
+        }
+        
+        if (guests) {
+            const guestsField = this.container.querySelector('#guests');
+            if (guestsField) guestsField.value = guests;
+        }
+        
+        if (rooms) {
+            const roomsField = this.container.querySelector('#rooms');
+            if (roomsField) roomsField.value = rooms;
+        }
     }
 
     render() {
@@ -27,11 +109,17 @@ export class SearchForm {
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="origin">From</label>
-                                <input type="text" id="origin" placeholder="City or Airport" required>
+                                <select id="origin" required>
+                                    <option value="">Select city</option>
+                                    ${this.cities.map(city => `<option value="${city.value}">${city.label}</option>`).join('')}
+                                </select>
                             </div>
                             <div class="form-group">
                                 <label for="destination">To</label>
-                                <input type="text" id="destination" placeholder="City or Airport" required>
+                                <select id="destination" required>
+                                    <option value="">Select city</option>
+                                    ${this.cities.map(city => `<option value="${city.value}">${city.label}</option>`).join('')}
+                                </select>
                             </div>
                         </div>
                         
@@ -111,13 +199,16 @@ export class SearchForm {
         const buttonText = this.container.querySelector('.button-text');
         const loadingSpinner = this.container.querySelector('.loading-spinner');
 
+        // Get search parameters first
+        const searchParams = this.getSearchParams();
+
+        // Update URL immediately with search parameters - navigate to /search
+        this.updateUrlFromParams(searchParams);
+
         // Show loading state
         searchButton.disabled = true;
         buttonText.classList.add('hidden');
         loadingSpinner.classList.remove('hidden');
-
-        // Get search parameters
-        const searchParams = this.getSearchParams();
 
         // Call the search callback - always search for both flights and hotels
         this.onSearch('combined', searchParams)
@@ -127,6 +218,35 @@ export class SearchForm {
                 buttonText.classList.remove('hidden');
                 loadingSpinner.classList.add('hidden');
             });
+    }
+
+    /**
+     * Update URL with search parameters
+     * @param {Object} searchParams - Search parameters
+     */
+    updateUrlFromParams(searchParams) {
+        const params = new URLSearchParams();
+        
+        // Extract flight parameters
+        if (searchParams.flights) {
+            const { origin, destination, departureDate, returnDate, passengers } = searchParams.flights;
+            if (origin) params.set('from', encodeURIComponent(origin));
+            if (destination) params.set('to', encodeURIComponent(destination));
+            if (departureDate) params.set('departure', departureDate);
+            if (returnDate) params.set('return', returnDate);
+            if (passengers) params.set('guests', passengers);
+        }
+        
+        // Extract hotel parameters
+        if (searchParams.hotels) {
+            const { rooms } = searchParams.hotels;
+            if (rooms) params.set('rooms', rooms);
+        }
+        
+        // Navigate to /search path with parameters
+        const basePath = '/search';
+        const newUrl = `${basePath}${params.toString() ? '?' + params.toString() : ''}`;
+        window.history.pushState({}, '', newUrl);
     }
 
     getSearchParams() {

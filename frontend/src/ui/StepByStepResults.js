@@ -132,7 +132,8 @@ export class StepByStepResults {
         const flights = this.allResults.flights.filter(flight => 
             !flight.returnDate || flight.returnDate === null
         );
-        const groupedFlights = this.groupResultsBySource(flights);
+        
+        console.log('Rendering outbound flights - NO GROUPING, flat list:', flights.length);
         
         this.container.querySelector('#stepContent').innerHTML = `
             <div class="step-header">
@@ -140,15 +141,10 @@ export class StepByStepResults {
                 <p>Select one or more flights you prefer for your departure</p>
             </div>
             
-            <div class="results-grid">
-                ${Object.entries(groupedFlights).map(([source, flights]) => `
-                    <div class="source-section">
-                        <h3 class="source-title">${source}</h3>
-                        <div class="flight-options">
-                            ${flights.map(flight => this.renderFlightOption(flight, 'outbound')).join('')}
-                        </div>
-                    </div>
-                `).join('')}
+            <div class="results-list">
+                <div class="flight-options">
+                    ${flights.map(flight => this.renderFlightOption(flight, 'outbound')).join('')}
+                </div>
             </div>
             
             <div class="step-actions">
@@ -163,7 +159,8 @@ export class StepByStepResults {
         const flights = this.allResults.flights.filter(flight => 
             flight.returnDate && flight.returnDate !== null
         );
-        const groupedFlights = this.groupResultsBySource(flights);
+        
+        console.log('Rendering return flights - NO GROUPING, flat list:', flights.length);
         
         this.container.querySelector('#stepContent').innerHTML = `
             <div class="step-header">
@@ -171,15 +168,10 @@ export class StepByStepResults {
                 <p>Select one or more flights you prefer for your return journey</p>
             </div>
             
-            <div class="results-grid">
-                ${Object.entries(groupedFlights).map(([source, flights]) => `
-                    <div class="source-section">
-                        <h3 class="source-title">${source}</h3>
-                        <div class="flight-options">
-                            ${flights.map(flight => this.renderFlightOption(flight, 'return')).join('')}
-                        </div>
-                    </div>
-                `).join('')}
+            <div class="results-list">
+                <div class="flight-options">
+                    ${flights.map(flight => this.renderFlightOption(flight, 'return')).join('')}
+                </div>
             </div>
             
             <div class="step-actions">
@@ -194,7 +186,7 @@ export class StepByStepResults {
     }
 
     renderHotels() {
-        const groupedHotels = this.groupResultsBySource(this.allResults.hotels);
+        console.log('Rendering hotels - NO GROUPING, flat list:', this.allResults.hotels.length);
         
         this.container.querySelector('#stepContent').innerHTML = `
             <div class="step-header">
@@ -202,15 +194,10 @@ export class StepByStepResults {
                 <p>Select one or more hotels you're interested in</p>
             </div>
             
-            <div class="results-grid">
-                ${Object.entries(groupedHotels).map(([source, hotels]) => `
-                    <div class="source-section">
-                        <h3 class="source-title">${source}</h3>
-                        <div class="hotel-options">
-                            ${hotels.map(hotel => this.renderHotelOption(hotel)).join('')}
-                        </div>
-                    </div>
-                `).join('')}
+            <div class="results-list">
+                <div class="hotel-options">
+                    ${this.allResults.hotels.map(hotel => this.renderHotelOption(hotel)).join('')}
+                </div>
             </div>
             
             <div class="step-actions">
@@ -252,35 +239,32 @@ export class StepByStepResults {
         const isSelected = this.selectedFlights[type].some(f => f.id === flight.id);
         
         return `
-            <div class="flight-option ${isSelected ? 'selected' : ''}" onclick="window.stepResults.selectFlight('${flight.id}', '${type}')">
-                <div class="option-header">
-                    <div class="airline-info">
-                        <span class="airline">${flight.airline}</span>
-                        <span class="flight-id">${flight.id}</span>
+            <div class="flight-option list-item ${isSelected ? 'selected' : ''}" onclick="window.stepResults.selectFlight('${flight.id}', '${type}')">
+                <div class="list-item-main">
+                    <div class="list-item-route">
+                        <div class="route-segment">
+                            <div class="route-time">${flight.departureTime}</div>
+                            <div class="route-location">${flight.origin}</div>
+                        </div>
+                        <div class="route-connector">
+                            <div class="route-duration">${flight.duration}</div>
+                            <div class="route-stops">${flight.stops === 0 ? 'Direct' : `${flight.stops} stop${flight.stops > 1 ? 's' : ''}`}</div>
+                        </div>
+                        <div class="route-segment">
+                            <div class="route-time">${flight.arrivalTime}</div>
+                            <div class="route-location">${flight.destination}</div>
+                        </div>
                     </div>
-                    <div class="price">
-                        <span class="amount">$${flight.price}</span>
-                        <span class="currency">${flight.currency}</span>
+                    <div class="list-item-airline">
+                        <div class="airline-name">${flight.airline}</div>
+                        <div class="flight-number">${flight.id}</div>
+                        <div class="source-badge">${flight.source}</div>
                     </div>
-                </div>
-                
-                <div class="flight-details">
-                    <div class="route">
-                        <div class="departure">
-                            <span class="time">${flight.departureTime}</span>
-                            <span class="location">${flight.origin}</span>
-                        </div>
-                        <div class="flight-info">
-                            <span class="duration">${flight.duration}</span>
-                            <span class="stops">${flight.stops === 0 ? 'Direct' : `${flight.stops} stop${flight.stops > 1 ? 's' : ''}`}</span>
-                        </div>
-                        <div class="arrival">
-                            <span class="time">${flight.arrivalTime}</span>
-                            <span class="location">${flight.destination}</span>
-                        </div>
+                    <div class="list-item-price">
+                        <div class="price-amount">$${flight.price}</div>
+                        <div class="price-currency">${flight.currency}</div>
                     </div>
                 </div>
-                
                 ${isSelected ? '<div class="selected-indicator">✓ Selected</div>' : ''}
             </div>
         `;
@@ -290,33 +274,29 @@ export class StepByStepResults {
         const isSelected = this.selectedHotels.some(h => h.id === hotel.id);
         
         return `
-            <div class="hotel-option ${isSelected ? 'selected' : ''}" onclick="window.stepResults.toggleHotel('${hotel.id}')">
-                <div class="option-header">
-                    <div class="hotel-info">
-                        <h4 class="hotel-name">${hotel.name}</h4>
-                        <div class="rating">
+            <div class="hotel-option list-item ${isSelected ? 'selected' : ''}" onclick="window.stepResults.toggleHotel('${hotel.id}')">
+                <div class="list-item-main">
+                    <div class="list-item-info">
+                        <div class="hotel-name-header">
+                            <div class="hotel-name">${hotel.name}</div>
+                            <div class="source-badge">${hotel.source}</div>
+                        </div>
+                        <div class="hotel-location">${hotel.location}</div>
+                        <div class="hotel-rating">
                             <span class="stars">${'★'.repeat(Math.floor(hotel.rating))}</span>
                             <span class="rating-value">${hotel.rating}</span>
                         </div>
+                        <div class="hotel-amenities">
+                            ${hotel.amenities.slice(0, 5).map(amenity => `
+                                <span class="amenity-tag">${amenity}</span>
+                            `).join('')}
+                        </div>
                     </div>
-                    <div class="price">
-                        <span class="amount">$${hotel.price}</span>
-                        <span class="currency">${hotel.currency}/night</span>
-                    </div>
-                </div>
-                
-                <div class="hotel-details">
-                    <div class="location">
-                        <span class="location-text">${hotel.location}</span>
-                    </div>
-                    
-                    <div class="amenities">
-                        ${hotel.amenities.map(amenity => `
-                            <span class="amenity">${amenity}</span>
-                        `).join('')}
+                    <div class="list-item-price">
+                        <div class="price-amount">$${hotel.price}</div>
+                        <div class="price-currency">${hotel.currency}/night</div>
                     </div>
                 </div>
-                
                 ${isSelected ? '<div class="selected-indicator">✓ Selected</div>' : ''}
             </div>
         `;

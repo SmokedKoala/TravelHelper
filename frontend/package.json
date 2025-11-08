@@ -5,8 +5,8 @@
   "main": "index.html",
   "type": "module",
   "scripts": {
-    "start": "npx http-server . -p 3000 -o",
-    "dev": "npx http-server . -p 3000 -o --cors"
+    "start": "npx http-server frontend -p 3000 -o",
+    "dev": "npx http-server frontend -p 3000 -o --cors"
   },
   "keywords": [
     "travel",
