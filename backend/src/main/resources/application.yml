@@ -1,0 +1,41 @@
+# ============================================================================
+# DATABASE CONFIGURATION
+# ============================================================================
+
+spring:
+  # ┌─ DataSource Configuration
+  # │
+  datasource:
+    url: jdbc:postgresql://localhost:5432/travelhelper_db
+    username: travelhelper_user
+    password: travelhelper_password
+    driver-class-name: org.postgresql.Driver
+    
+    # └─ Connection Pool (HikariCP)
+    #    │
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 20000
+      idle-timeout: 300000
+      max-lifetime: 600000
+
+  # ============================================================================
+  # JPA / HIBERNATE CONFIGURATION
+  # ============================================================================
+  
+  # ┌─ JPA Settings
+  # │
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+    
+    # └─ Hibernate Properties
+    #    │
+    properties:
+      hibernate:
+        default_schema: travelhelper_schema
+        format_sql: true
+
