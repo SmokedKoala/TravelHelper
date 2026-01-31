@@ -17,3 +17,13 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
     ALTER USER travelhelper_user SET search_path TO travelhelper_schema, public;
 EOSQL
 
+# Drop the default postgres database (connect to our app database first)
+psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
+    SELECT pg_terminate_backend(pg_stat_activity.pid)
+    FROM pg_stat_activity
+    WHERE pg_stat_activity.datname = 'postgres'
+      AND pid <> pg_backend_pid();
+    
+    DROP DATABASE IF EXISTS postgres;
+EOSQL
+
