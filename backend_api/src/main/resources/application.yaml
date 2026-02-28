@@ -1,0 +1,26 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/travelhelper_db
+    username: travelhelper_user
+    password: travelhelper_password
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 20000
+      idle-timeout: 300000
+      max-lifetime: 600000
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+    properties:
+      hibernate:
+        default_schema: travelhelper_schema
+        format_sql: true
+
+clients:
+  openweathermap:
+    url: https://api.openweathermap.org/data/2.5
+    token: 0acbfc7c7f6224267e9f41384d3ea780
